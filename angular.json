@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "dragon-online-ide": {
+    "naja-online-ide": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/dragon-online-ide",
+            "outputPath": "dist/naja-online-ide",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": [
@@ -60,10 +60,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "dragon-online-ide:build:production"
+              "browserTarget": "naja-online-ide:build:production"
             },
             "development": {
-              "browserTarget": "dragon-online-ide:build:development"
+              "browserTarget": "naja-online-ide:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -71,7 +71,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "dragon-online-ide:build"
+            "browserTarget": "naja-online-ide:build"
           }
         },
         "test": {
