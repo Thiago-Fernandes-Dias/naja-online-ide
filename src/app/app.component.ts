@@ -15,6 +15,10 @@ export class AppComponent {
 
   private compilerService: CompilerService = inject(CompilerService);
 
+  public editorOptions = {
+    lineNumbers: true,
+    mode: 'naja'
+  }
   ngAfterViewInit(): void {
     this.cmComponent.codeMirrorGlobal.defineSimpleMode("naja",
       {
