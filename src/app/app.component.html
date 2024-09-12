@@ -4,16 +4,67 @@
       Naja Online Editor 🐍
     </h2>
   </div>
-  <div class="border-solid border rounded-lg overflow-hidden max-w-full">
-    <ngx-codemirror [options]="options" [ngModel]="defaults[mode]" [disabled]="readOnly" [autoFocus]="true"
-      (ngModelChange)="handleChange($event)"></ngx-codemirror>
+  <div class="flex justify-center gap-x-4">
+    <ng-container *ngIf="getCompiledCode() != ''; else errorTemplate">
+      <div class="float-right w-1/2">
+        <app-code-container>
+          <ngx-codemirror
+            [options]="{
+              lineNumbers: true,
+              mode: 'naja'
+            }"
+            [(ngModel)]="code"
+            [autoFocus]="true"
+          ></ngx-codemirror>
+        </app-code-container>
+      </div>
+      <div class="float-right w-1/2">
+        <app-code-container>
+          <p>{{ getCompiledCode() }}</p>
+        </app-code-container>
+      </div>
+    </ng-container>
+
+    <ng-template #errorTemplate>
+      <ng-container *ngIf="getError() != ''; else codeOnlyTemplate">
+        <div class="float-right w-1/2">
+          <app-code-container>
+            <ngx-codemirror
+              [options]="{
+                lineNumbers: true,
+                mode: 'naja'
+              }"
+              [(ngModel)]="code"
+              [autoFocus]="true"
+            ></ngx-codemirror>
+          </app-code-container>
+        </div>
+        <div class="float-right w-1/2">
+          <app-code-container class="text-red-500">
+            <p>{{ getError() }}</p>
+          </app-code-container>
+        </div>
+      </ng-container>
+    </ng-template>
+
+    <ng-template #codeOnlyTemplate>
+      <div class="float-right w-full">
+        <app-code-container>
+          <ngx-codemirror
+            [options]="{
+              lineNumbers: true,
+              mode: 'naja'
+            }"
+            [(ngModel)]="code"
+            [autoFocus]="true"
+          ></ngx-codemirror>
+        </app-code-container>
+      </div>
+    </ng-template>
   </div>
+
   <div class="flex justify-start gap-x-4">
-    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold rounded">
-      Button 1
-    </button>
-    <button class="bg-red-500 hover:bg-red-700 text-white font-bold rounded">
-      Button 2
-    </button>
+    <app-compile-btn lang="python" (action)="compile($event)"></app-compile-btn>
+    <app-compile-btn lang="java" (action)="compile($event)"></app-compile-btn>
   </div>
 </div>
