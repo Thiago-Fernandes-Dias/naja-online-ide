@@ -21,7 +21,7 @@ export class CompilerService {
       },
       error: (err: HttpErrorResponse) => {
         if (err.error?.errors)
-          this.errorMessage = err.error?.errors[0]?.defaultMessage;
+          this.errorMessage = err.error.message;
         else
           this.errorMessage = err.error.toString();
       },
