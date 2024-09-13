@@ -5,20 +5,20 @@
     </h2>
   </div>
   <div class="flex justify-center gap-x-4">
-    <ng-container *ngIf="getCompiledCode() != ''; else errorTemplate">
+    <ng-container *ngIf="compiledCode != '' ; else errorTemplate">
       <div class="float-right w-1/2">
         <app-code-container>
-          <ngx-codemirror [options]="editorOptions" [(ngModel)]="code" [autoFocus]="true"></ngx-codemirror>
+          <ngx-codemirror [options]="editorOptions" [(ngModel)]="code" [autoFocus]="true" />
         </app-code-container>
       </div>
       <div class="float-right w-1/2">
         <app-code-container>
-          <p class="px-4 py-4">{{ getCompiledCode() }}</p>
+          <ngx-codemirror [options]="resultOptions()" [ngModel]="compiledCode" />
         </app-code-container>
       </div>
     </ng-container>
     <ng-template #errorTemplate>
-      <ng-container *ngIf="getError() != ''; else codeOnlyTemplate">
+      <ng-container *ngIf="compilationError != ''; else codeOnlyTemplate">
         <div class="float-right w-1/2">
           <app-code-container>
             <ngx-codemirror [options]="editorOptions" [(ngModel)]="code" [autoFocus]="true"></ngx-codemirror>
@@ -26,7 +26,7 @@
         </div>
         <div class="float-right w-1/2">
           <app-code-container class="text-red-500">
-            <p class="px-4 py-4">{{ getError() }}</p>
+            <p class="px-4 py-4">{{ compilationError }}</p>
           </app-code-container>
         </div>
       </ng-container>

@@ -1,6 +1,7 @@
 import { Component, inject, ViewChild } from '@angular/core';
 import { CodemirrorComponent } from '@ctrl/ngx-codemirror';
 import { CompilerService } from './compiler.service';
+import { CompileResponse } from './compiled-code-response';
 
 @Component({
   selector: 'app-root',
@@ -10,58 +11,34 @@ import { CompilerService } from './compiler.service';
 export class AppComponent {
   public code: string = '';
 
-  @ViewChild(CodemirrorComponent, { static: false })
-  private cmComponent!: CodemirrorComponent;
-
   private compilerService: CompilerService = inject(CompilerService);
 
   public editorOptions = {
     lineNumbers: true,
     mode: 'naja'
   }
-  ngAfterViewInit(): void {
-    this.cmComponent.codeMirrorGlobal.defineSimpleMode("naja",
-      {
-        start: [
-          { regex: /programa|declare|inicio|fim|fimprog|leia|escreva|se|entao|senao|fimse|enquanto|faça|fimfaça/, token: "keyword" },
-          { regex: /number|text/, token: "atom" },
-          { regex: /[a-zA-Z_]\w*/, token: "variable" },
-          { regex: /[0-9]+/, token: "number" },
-          { regex: /"([^\\"]|\\.)*"/, token: "string" },
-          { regex: /:=|<=|>=|==|!=|<|>|[+\-*/]/, token: "operator" },
-          { regex: /,|;|\(|\)/, token: "punctuation" },
-          { regex: /\/\*/, token: "comment", next: "comment" },
-          { regex: /\/\/.*/, token: "comment" }
-        ],
-        comment: [
-          { regex: /.*?\*\//, token: "comment", next: "start" },
-          { regex: /.*/, token: "comment" }
-        ],
-        meta: {
-          lineComment: "//"
-        }
-      }
-    );
-    this.cmComponent.codeMirrorGlobal.setOption("mode", "naja");
+
+  resultOptions() {
+    const result = this.compilerService.getCompileResponse();
+    return {
+      lineNumbers: false,
+      mode: result ? result.lang : "markdown",
+      readOnly: true,
+      theme: "material-light"
+    };
   }
 
   compile(lang: string): void {
-    this.compilerService.getCompiledCode(this.code, lang);
+    this.compilerService.getCompiledCode(this.code, "lang");
   }
 
-  getCompiledCode(): string {
-    const result = this.compilerService.getCompilationResult();
-    if (typeof result === 'string') {
-      return result;
-    }
-    return "";
+  get compiledCode(): string {
+    const response = this.compilerService.getCompileResponse();
+    return response ? response.code : "";
   }
 
-  getError(): string {
-    const result = this.compilerService.getCompilationResult();
-    if (result instanceof Error) {
-      return result.message;
-    }
-    return "";
+  get compilationError(): string {
+    const result = this.compilerService.getError();
+    return result ? result : "";
   }
 }

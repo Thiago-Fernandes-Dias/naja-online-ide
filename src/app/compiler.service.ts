@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { HttpHeaders } from '@angular/common/http';
 import { CompileResponse } from './compiled-code-response';
@@ -7,30 +7,32 @@ import { CompileResponse } from './compiled-code-response';
   providedIn: 'root'
 })
 export class CompilerService {
-  private compilationResult?: CompileResponse | Error;
+  private compileResponse?: CompileResponse;
+  private errorMessage = "";
 
   constructor(private httpClient: HttpClient) { }
 
   getCompiledCode(najaCode: string, lang: string): void {
-    console.log("Pass here");
     const endpoint = 'http://localhost:8080/compile';
-    const payload = new FormData();
-    const blob = new Blob([najaCode], { type: '.txt' })
-    const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
-    payload.append('file', blob);
-    this.httpClient.post<CompileResponse>(endpoint, payload, { headers }).subscribe({
+    const payload = { code: najaCode, lang };
+    this.httpClient.post<CompileResponse>(endpoint, payload).subscribe({
       next: resData => {
-        this.compilationResult = resData;
-        console.log(resData);
+        this.compileResponse = resData;
       },
-      error: err => {
-        this.compilationResult = new Error(err.toString());
-        console.log(err.toString());
+      error: (err: HttpErrorResponse) => {
+        if (err.error?.errors)
+          this.errorMessage = err.error?.errors[0]?.defaultMessage;
+        else
+          this.errorMessage = err.error.toString();
       },
     });
   }
 
-  getCompilationResult() {
-    return this.compilationResult;
+  getCompileResponse() {
+    return this.compileResponse;
+  }
+
+  getError() {
+    return this.errorMessage;
   }
 }

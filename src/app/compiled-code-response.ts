@@ -1,4 +1,4 @@
-export type CompileResponse = {
+export interface CompileResponse {
   code: string;
   lang: string;
 }
