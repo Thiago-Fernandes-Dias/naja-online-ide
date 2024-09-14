@@ -29,7 +29,7 @@ export class AppComponent {
   }
 
   compile(lang: string): void {
-    this.compilerService.getCompiledCode(this.code, "lang");
+    this.compilerService.getCompiledCode(this.code, lang);
   }
 
   get compiledCode(): string {

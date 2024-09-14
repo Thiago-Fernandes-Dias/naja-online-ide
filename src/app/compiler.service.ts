@@ -13,6 +13,8 @@ export class CompilerService {
   constructor(private httpClient: HttpClient) { }
 
   getCompiledCode(najaCode: string, lang: string): void {
+    this.errorMessage = "";
+    this.compileResponse = undefined;
     const endpoint = 'http://localhost:8080/compile';
     const payload = { code: najaCode, lang };
     this.httpClient.post<CompileResponse>(endpoint, payload).subscribe({
@@ -20,10 +22,7 @@ export class CompilerService {
         this.compileResponse = resData;
       },
       error: (err: HttpErrorResponse) => {
-        if (err.error?.errors)
-          this.errorMessage = err.error.message;
-        else
-          this.errorMessage = err.error.toString();
+        this.errorMessage = err.error.message;
       },
     });
   }
